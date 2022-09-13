@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.io.File
 
+@Deprecated("unsafety")
 class ParcelEditor<T : Parcelable>() {
 
     fun toByteArray(target: T): ByteArray {
