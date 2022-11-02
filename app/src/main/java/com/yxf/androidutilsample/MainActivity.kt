@@ -4,6 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
+import com.yxf.androidutil.coroutine.launch
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import java.io.BufferedOutputStream
 import java.io.DataOutputStream
 import java.io.File
@@ -15,7 +19,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        parcelTest()
+        //parcelTest()
+        launchTest()
+    }
+
+    private fun launchTest() {
+        GlobalScope.launch(Dispatchers.IO, CoroutineExceptionHandler { coroutineContext, throwable ->
+            Log.d("Debug.launch", "catch exception, current thread: ${Thread.currentThread().id}")
+        }) {
+            Log.d("Debug.launch", "launch, current thread: ${Thread.currentThread().id}")
+            throw RuntimeException("Test exception")
+        }
     }
 
     private fun parcelTest() {

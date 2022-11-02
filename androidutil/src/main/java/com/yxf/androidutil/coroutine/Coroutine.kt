@@ -1,14 +1,13 @@
 package com.yxf.androidutil.coroutine
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 fun <T> Flow<T>.collectOnCoroutine(
     coroutineScope: CoroutineScope,
@@ -44,4 +43,15 @@ fun <T> Flow<T>.catchOnCoroutine(
     block: FlowCollector<T>.(Throwable) -> Unit
 ): Flow<T> {
     return catchOnCoroutine(coroutineScope, block, Dispatchers.Main)
+}
+
+fun CoroutineScope.launch(
+    context: CoroutineContext,
+    exceptionHandler: CoroutineExceptionHandler,
+    start: CoroutineStart = CoroutineStart.DEFAULT,
+    block: suspend CoroutineScope.() -> Unit
+): Job {
+    return this.launch(exceptionHandler) {
+        launch(context, start, block)
+    }
 }
